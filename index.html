@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Test Review Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .card {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .question-num {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            font-weight: bold;
+        }
+        .spanish-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2980b9;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            margin: 5px 5px 5px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        button:hover {
+            background-color: #219653;
+        }
+        .audio-btn {
+            background-color: #e67e22;
+        }
+        .audio-btn:hover {
+            background-color: #d35400;
+        }
+        .answer-box {
+            margin-top: 10px;
+            padding: 10px;
+            background: #eef2f3;
+            border-left: 4px solid #2980b9;
+            display: none;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🇪🇸 Spanish Review Game</h1>
+    <p style="text-align: center; color: #666;">Practice your numbers, months, and days with audio support!</p>
+
+    <div id="quiz-container"></div>
+
+    <div class="controls">
+        <button onclick="readAll()" class="audio-btn" style="padding: 12px 20px; font-size: 1rem;">🔊 Read All Questions Out Loud</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // Days of the Week
+            {
+                category: "Days of the Week (Días de la semana)",
+                spanish: "¿Qué día es hoy si ayer fue lunes?",
+                english: "Tuesday"
+            },
+            {
+                category: "Days of the Week (Días de la semana)",
+                spanish: "¿Cuál es el primer día de la semana en el mundo hispanohablante?",
+                english: "Monday (Lunes)"
+            },
+            {
+                category: "Days of the Week (Días de la semana)",
+                spanish: "¿Qué día viene después del jueves?",
+                english: "Friday"
+            },
+            // Months of the Year
+            {
+                category: "Months of the Year (Meses del año)",
+                spanish: "¿Cuál es el mes que viene después de octubre?",
+                english: "November"
+            },
+            {
+                category: "Months of the Year (Meses del año)",
+                spanish: "¿En qué mes celebramos el año nuevo?",
+                english: "January"
+            },
+            {
+                category: "Months of the Year (Meses del año)",
+                spanish: "¿Cuál es el mes más corto del año?",
+                english: "February"
+            },
+            // Numbers
+            {
+                category: "Numbers (Números)",
+                spanish: "¿Cómo se escribe el número quince en español?",
+                english: "Fifteen (15)"
+            },
+            {
+                category: "Numbers (Números)",
+                spanish: "Suma: diez más veinte son...",
+                english: "Thirty (30)"
+            },
+            {
+                category: "Numbers (Números)",
+                spanish: "¿Qué número sigue después del noventa y nueve?",
+                english: "One hundred (100)"
+            }
+        ];
+
+        const container = document.getElementById("quiz-container");
+
+        quizData.forEach((item, index) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <div class="question-num">Question ${index + 1} - ${item.category}</div>
+                <div class="spanish-text">${item.spanish}</div>
+                <button class="audio-btn" onclick="speakText('${item.spanish}')">🔊 Listen to Question</button>
+                <button onclick="toggleAnswer(${index})">👁️ Show/Hide Answer</button>
+                <div id="answer-${index}" class="answer-box"><strong>Answer (English):</strong> ${item.english}</div>
+            `;
+            container.appendChild(card);
+        });
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop any ongoing speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-ES'; // Set voice to Spanish
+                utterance.rate = 0.9; // Slightly slower for better learning
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Sorry, your browser doesn't support text-to-speech audio.");
+            }
+        }
+
+        function toggleAnswer(index) {
+            const ansBox = document.getElementById(`answer-${index}`);
+            ansBox.style.display = ansBox.style.display === "block" ? "none" : "block";
+        }
+
+        function readAll() {
+            let fullText = "Here is your Spanish review. ";
+            quizData.forEach((item, index) => {
+                fullText += `Question ${index + 1}: ${item.spanish}. `;
+            });
+            speakText(fullText);
+        }
+    </script>
+
+</body>
+</html>
